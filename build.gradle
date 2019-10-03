@@ -1,0 +1,107 @@
+buildscript {
+    repositories {
+        jcenter()
+    }
+}
+
+plugins {
+    id 'org.jetbrains.kotlin.multiplatform' version '1.3.50'
+}
+repositories {
+    jcenter()
+    maven { url "https://dl.bintray.com/kotlin/ktor" }
+    mavenCentral()
+}
+def ktor_version = '1.2.4'
+def kotlinx_html_version = "0.6.11"
+def logback_version = '1.2.3'
+
+kotlin {
+    jvm()
+js {
+        browser {
+        }
+    }
+    sourceSets {
+        commonMain {
+            dependencies {
+                implementation kotlin('stdlib-common')
+            }
+        }
+        commonTest {
+            dependencies {
+                implementation kotlin('test-common')
+                implementation kotlin('test-annotations-common')
+            }
+        }
+        jvmMain {
+            dependencies {
+                implementation kotlin('stdlib-jdk8')
+                implementation "io.ktor:ktor-server-netty:$ktor_version"
+                implementation "io.ktor:ktor-html-builder:$ktor_version"
+                implementation "ch.qos.logback:logback-classic:$logback_version"
+                implementation "io.ktor:ktor-server-core:$ktor_version"
+                implementation "io.ktor:ktor-auth:$ktor_version"
+                implementation "io.ktor:ktor-auth-jwt:$ktor_version"
+                implementation "io.ktor:ktor-gson:$ktor_version"
+                implementation 'org.koin:koin-ktor:2.0.1'
+                implementation 'org.mongodb:mongodb-driver-sync:3.11.0'
+            }
+        }
+        jvmTest {
+            dependencies {
+                implementation kotlin('test')
+                implementation kotlin('test-junit')
+//                testImplementation "io.ktor:ktor-server-tests:$ktor_version"
+//                testImplementation 'org.koin:koin-test:2.0.1'
+//                testImplementation "io.mockk:mockk:1.9.3"
+            }
+        }
+        jsMain {
+            dependencies {
+                implementation kotlin('stdlib-js')
+                implementation "org.jetbrains.kotlinx:kotlinx-html-js:${kotlinx_html_version}"
+                implementation "io.ktor:ktor-client-js:$ktor_version"
+                implementation "org.jetbrains.kotlinx:kotlinx-coroutines-core-js:1.3.2"
+                implementation "com.github.salomonbrys.kodein:kodein-js:4.1.0"
+            }
+        }
+        jsTest {
+            dependencies {
+                implementation kotlin('test-js')
+//                testImplementation "org.jetbrains.kotlin:kotlin-test-js"
+            }
+        }
+    }
+}
+
+task copyJsResourcesToJvmResources(type:Copy){
+    from("src/jsMain/resources")
+    include 'index.html'
+    include 'styles.less'
+    into "src/jvmMain/resources"
+}
+
+task copyJsToJvm(type: Copy){
+    from("$buildDir/js/packages/ManageMeMPP/kotlin")
+    include 'ManageMeMPP.js'
+    include 'ManageMeMPP.meta.js'
+    into "src/jvmMain/resources"
+}
+
+task copyJsDependenciesToJcm(type:Copy){
+    from("$buildDir/js/packages_imported")
+    into "src/jvmMain/resources"
+}
+
+jvmJar {
+    dependsOn(jsBrowserWebpack)
+    from(new File(jsBrowserWebpack.entry.name, jsBrowserWebpack.outputPath))
+}
+
+task run(type: JavaExec, dependsOn: [jvmJar, copyJsDependenciesToJcm,copyJsToJvm, copyJsResourcesToJvmResources]) {
+    group = "application"
+    main = "com.manageme.managemeserver.ApplicationKt"
+    classpath(configurations.jvmRuntimeClasspath, jvmJar)
+    args = []
+}
