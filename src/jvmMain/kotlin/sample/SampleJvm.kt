@@ -1,5 +1,6 @@
 package sample
 
+import com.manageme.managemecommon.persistence.TestModel
 import io.ktor.application.call
 import io.ktor.html.respondHtml
 import io.ktor.http.content.resource
@@ -19,6 +20,7 @@ actual object Platform {
 }
 
 fun main() {
+
     embeddedServer(Netty, port = 8080, host = "127.0.0.1") {
         routing {
             get("/") {

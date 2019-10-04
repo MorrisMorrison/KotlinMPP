@@ -25,32 +25,11 @@ import org.koin.ktor.ext.get
 import java.text.DateFormat
 
 fun main(args: Array<String>) {
-//    val module = module{
-//        single{ToDoController(get())}
-//        single{ToDoService()}
-//    }
-//    startKoin{
-//        modules(module)
-//    }
     io.ktor.server.netty.EngineMain.main(args)
 }
 
-
-/*fun main(args: Array<String>) {
-    val server = embeddedServer(Netty, port = 8080) {
-        routing {
-            get("/") {
-                call.respondText("Hello World!", ContentType.Text.Plain)
-            }
-            get("/demo") {
-                call.respondText("HELLO WORLD!")
-            }
-        }
-    }
-    server.start(wait = true)
-}*/
-
 fun Application.main() {
+
 
     routing {
         static {
@@ -95,7 +74,6 @@ fun Application.main() {
         }
     }
 
-
     val persistence = module {
         single {
             DbConfig(environment.config)
@@ -129,9 +107,6 @@ fun Application.main() {
     install(CORS) {
         anyHost()
     }
-
-
-
 
     install(Koin) {
         //        modules(listOf(toDo, notes))
@@ -183,8 +158,5 @@ fun Application.notes() {
     }
 }
 
-fun Application.finance() {
-
-}
 
 

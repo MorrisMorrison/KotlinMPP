@@ -3,6 +3,7 @@ import com.github.salomonbrys.kodein.erased.bind
 import com.github.salomonbrys.kodein.erased.instance
 import com.github.salomonbrys.kodein.erased.singleton
 import com.github.salomonbrys.kodein.newInstance
+import com.manageme.managemecommon.persistence.TestModel
 import com.mwlltr.managemeclient.Router
 import com.mwlltr.managemeclient.Routes
 import com.mwlltr.managemeclient.components.DrawerComponent
@@ -25,10 +26,11 @@ fun main(args: Array<String>) {
 
     // init Materialize CSS stuff
     refreshMaterialize()
+
+
 }
 
 fun initBasicStructure(kodein: Kodein) {
-//fun main() {
     document.addEventListener("DOMContentLoaded", {
         document.getElementById("header")!!.append(NavBarComponent("navbar").skeleton)
         document.getElementById("drawer")!!.append(kodein.newInstance {
@@ -39,7 +41,8 @@ fun initBasicStructure(kodein: Kodein) {
         }.skeleton)
         document.getElementById("footer")!!.append(FooterComponent("footer").skeleton)
     })
-//}
+
+
 }
 
 fun setupDependencyInjection(): Kodein {

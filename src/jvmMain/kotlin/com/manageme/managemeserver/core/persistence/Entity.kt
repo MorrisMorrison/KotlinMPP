@@ -1,4 +1,4 @@
-package com.manageme.managemeserver.core.persistence
+package com.manageme.managemeserver.persistence
 
 import org.bson.types.ObjectId
 import java.time.Instant
@@ -11,7 +11,7 @@ interface IEntity {
     var updatedAt: Date
 }
 
-abstract class Entity() : IEntity {
+abstract class Entity : IEntity {
     override var name: String = ""
     @Transient
     override var id: ObjectId = ObjectId()

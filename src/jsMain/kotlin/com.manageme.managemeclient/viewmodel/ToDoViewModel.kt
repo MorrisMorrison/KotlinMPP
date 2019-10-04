@@ -11,10 +11,10 @@ class ToDoViewModel(private val toDoModel: ToDoModel, private val toDoService: T
 
     fun add(inputId: String) {
         suspend {
-            toDoService.create(ToDo(inputId)).onSuccess {
+//            toDoService.create(ToDo(inputId)).onSuccess {
                 toDoModel.todos.add(ToDo(inputId))
                 console.log("Success!!!")
-            }
+//            }
         }
 
         console.log(toDoModel.properties[inputId])

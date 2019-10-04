@@ -32,16 +32,12 @@ class ToDoService : ICrudService<IToDo> {
         val response: String = client.get("http://0.0.0.0:8080/todo/$id")
         val result: IToDo = JSON.parse(response)
 
-        console.log(result)
-
         return result
     }
 
     override suspend fun getAll(): List<IToDo> {
         val response: String = client.get("http://0.0.0.0:8080/todo/")
         val result: Array<IToDo> = JSON.parse(response)
-
-        console.log(result)
 
         return result.toList()
     }

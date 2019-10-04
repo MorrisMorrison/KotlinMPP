@@ -1,6 +1,7 @@
 package com.mwlltr.managemeclient.components
 
 import Components.ComplexComponent
+import com.manageme.managemecommon.persistence.TestModel
 import com.mwlltr.managemeclient.model.IToDo
 import com.mwlltr.managemeclient.viewmodel.ToDoViewModel
 import kotlinx.coroutines.GlobalScope
@@ -39,11 +40,6 @@ class ToDoComponent(private var toDoViewModel: ToDoViewModel, override var rootI
 
 
     override fun render() {
-        loadToDos()
-
-        console.log(rootId)
-        console.log(viewModel)
-        console.log(document.getElementById("content"))
         document.getElementById("content")!!.append(skeleton)
 
         CardComponent("$rootId-main", "$rootId-main").setCardTitle(document.create.span {
@@ -108,13 +104,22 @@ class ToDoComponent(private var toDoViewModel: ToDoViewModel, override var rootI
             .setCardContent(document.create.div {
             })
             .render()
+
+        loadToDos()
     }
 
 
     fun add(name: String = "") {
-//        var todo = toDoViewModel.model.properties[inputId]
 
-        var todo = name
+        var todo = if (name != ""){
+            name
+        }else{
+            toDoViewModel.model.properties[inputId]!!
+        }
+
+        console.log("Name: " + name)
+        console.log("ToDo: " + todo)
+
         document.getElementById("todo-list")!!.append(document.create.li {
             classes = setOf("collection-item", "no-borders")
             div {
@@ -166,8 +171,5 @@ class ToDoComponent(private var toDoViewModel: ToDoViewModel, override var rootI
                 add(it.name)
             }
         }
-
-        console.log(toDoViewModel)
     }
-
 }
